@@ -1,15 +1,14 @@
 import { ipcMain } from 'electron';
-import { platform } from 'os';
 import ffi from 'ffi-napi';
 
 export default () => {
-  ipcMain.on('rdp-test', async (event, _arg) => {
-        event.reply('rdp-test', {
+    ipcMain.on('rdp-test', async (event, _arg) => {
+        event.reply('rdp-test', JSON.stringify({
           timestamp: Date.now(),
-          platform: platform,
+          platform: process.platform,
           isRdp: isRdp(),
-        });
-  });
+        }));
+    });
 }
 
 const isRdp = (): Boolean => {

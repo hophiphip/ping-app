@@ -11,7 +11,8 @@ export default () => {
 
   useEffect(() => {
     window.electron.ipcRenderer.on('rdp-test', (data) => {
-      setMessage(JSON.stringify(data));
+      const values = JSON.parse(String(data));
+      setMessage(`${values.platform}: [${values.timestamp}] ${values.isRdp ? 'rdp session' : 'desktop session'}`);
     });
   }, []);
 
