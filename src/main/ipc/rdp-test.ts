@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import ffi from 'ffi-napi';
+import ref from 'ref-napi';
 
 export default () => {
     ipcMain.on('rdp-test', async (event, _arg) => {
@@ -30,9 +31,18 @@ const isRdp = (): Boolean => {
  */
 const isWindowsRDPEnv = (): Boolean => {
     const SM_REMOTESESSION = 0x1000;
+
+    const TERMINAL_SERVER_KEY = "SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\";
+    const GLASS_SESSION_ID    = "GlassSessionId";
+
+    let phkResult = ref.refType('int');
+
     const libUser32 = ffi.Library('user32', {
         'GetSystemMetrics': [
             'bool', [ 'int32' ]
+        ],
+        'RegOpenKeyEx': [
+            'long', [ 'long', 'string', 'int', 'long', phkResult ]
         ]
     });
 
