@@ -42,6 +42,14 @@ if (process.env.NODE_ENV === 'production') {
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
+const logErr = (err: any) => {
+  if (isDebug) console.log(err);
+  else {
+    Sentry.captureException(err);
+    log.error(err);
+  }
+};
+
 if (isDebug) {
   require('electron-debug')();
 }
@@ -56,7 +64,7 @@ const installExtensions = async () => {
       extensions.map((name) => installer[name]),
       forceDownload
     )
-    .catch(console.log);
+    .catch(logErr);
 };
 
 const createWindow = async () => {
@@ -137,4 +145,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
+  .catch(logErr);
