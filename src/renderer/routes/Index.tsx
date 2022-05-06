@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import '../css/Index.css';
 
 export default () => {
+  const { t } = useTranslation();
+
   const [isRemote, setIsRemote] = useState(false);
   const [platform, setPlatform] = useState('');
   const [timestamp, setTimestamp] = useState('');
@@ -27,7 +30,7 @@ export default () => {
 
   return (
     <div>
-      <button onClick={onButtonClick}>Request HOST status</button>
+      <button onClick={onButtonClick}>{t('Update button')}</button>
       <p><strong>Timestamp:</strong> {timestamp}</p>
       <p><strong>Platform:</strong> {platform}</p>
       <p><strong>Session:</strong> {isRemote ? 'remote' : 'local'}</p>
