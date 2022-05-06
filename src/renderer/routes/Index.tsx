@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { WithTranslation, withTranslation } from 'react-i18next';
 
 import '../css/Index.css';
 
-export default () => {
-  const { t } = useTranslation();
-
+const Index: React.FC<WithTranslation> = ({ t }) => {
   const [isRemote, setIsRemote] = useState(false);
   const [platform, setPlatform] = useState('');
   const [timestamp, setTimestamp] = useState('');
@@ -31,9 +29,11 @@ export default () => {
   return (
     <div>
       <button onClick={onButtonClick}>{t('Update button')}</button>
-      <p><strong>Timestamp:</strong> {timestamp}</p>
-      <p><strong>Platform:</strong> {platform}</p>
-      <p><strong>Session:</strong> {isRemote ? 'remote' : 'local'}</p>
+      <p><strong>{t('Timestamp')}:</strong> {timestamp}</p>
+      <p><strong>{t('Platform')}:</strong> {platform}</p>
+      <p><strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}</p>
     </div>
   );
 };
+
+export default withTranslation()(Index);

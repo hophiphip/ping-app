@@ -9,6 +9,11 @@ export default () => {
         en: {
           translation: {
             "Update button": "Request host system status",
+            "Timestamp": "Timestamp",
+            "Platform": "Platforms",
+            "Session": "Session",
+            "local": "local",
+            "remote": "remote",
           }
         }
       },
