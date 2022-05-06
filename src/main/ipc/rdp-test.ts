@@ -1,62 +1,62 @@
 import { ipcMain } from 'electron';
 
 export default () => {
-    ipcMain.on('rdp-test', async (event, _arg) => {
-      event.reply('rdp-test', JSON.stringify({
-        timestamp: Date.now(),
-        platform: process.platform,
-        isRdp: isRdp(),
-      }));
-    });
-  };
+  ipcMain.on('rdp-test', async (event, _arg) => {
+    event.reply('rdp-test', JSON.stringify({
+      timestamp: Date.now(),
+      platform: process.platform,
+      isRdp: isRdp(),
+    }));
+  });
+};
 
-  const isRdp = (): Boolean => {
-    switch (process.platform) {
-      case "win32": {
-        return isWindowsRDPEnv();
-      }
-
-      default: {
-        return isUnixRDPEnv();
-      }
+const isRdp = (): Boolean => {
+  switch (process.platform) {
+    case "win32": {
+      return isWindowsRDPEnv();
     }
-  };
 
-  /**
-   * Test if application in Windows OS runs in RDP service environment.
-   *  Reference: https://docs.microsoft.com/en-us/windows/win32/termserv/detecting-the-terminal-services-environment
-   * @returns Boolean
-   */
-  const isWindowsRDPEnv = (): boolean => {
-    if (process.platform !== "win32") return false;
+    default: {
+      return isUnixRDPEnv();
+    }
+  }
+};
 
-    const ffi = require('ffi-napi');
-    const ref = require('ref-napi');
+/**
+ * Test if application in Windows OS runs in RDP service environment.
+ *  Reference: https://docs.microsoft.com/en-us/windows/win32/termserv/detecting-the-terminal-services-environment
+ * @returns Boolean
+ */
+const isWindowsRDPEnv = (): boolean => {
+  if (process.platform !== "win32") return false;
 
-    const SM_REMOTESESSION = 0x1000;
+  const ffi = require('ffi-napi');
+  const ref = require('ref-napi');
 
-    const HKEY_LOCAL_MACHINE_VAL  = 0x80000002; // uint
-    let   HKEY_LOCAL_MACHINE_BUF  = ref.alloc('int');
-    HKEY_LOCAL_MACHINE_BUF.writeUInt32LE(HKEY_LOCAL_MACHINE_VAL, 0);
-    const HKEY_LOCAL_MACHINE      = ref.ref(HKEY_LOCAL_MACHINE_BUF);
+  const SM_REMOTESESSION = 0x1000;
 
-    const TERMINAL_SERVER_KEY_VAL = UTF8ToUTF16("SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\");
-    let   TERMINAL_SERVER_KEY_BUF = ref.alloc('CString');
-    TERMINAL_SERVER_KEY_BUF.writeCString(TERMINAL_SERVER_KEY_VAL);
-    const TERMINAL_SERVER_KEY     = ref.ref(TERMINAL_SERVER_KEY_BUF);
+  const HKEY_LOCAL_MACHINE_VAL  = 0x80000002; // uint
+  let   HKEY_LOCAL_MACHINE_BUF  = ref.alloc('int');
+  HKEY_LOCAL_MACHINE_BUF.writeUInt32LE(HKEY_LOCAL_MACHINE_VAL, 0);
+  const HKEY_LOCAL_MACHINE      = ref.ref(HKEY_LOCAL_MACHINE_BUF);
 
-    const GLASS_SESSION_ID_VAL = UTF8ToUTF16("GlassSessionId");
-    let   GLASS_SEsSION_ID_BUF = ref.alloc('CString');
-    GLASS_SEsSION_ID_BUF.writeCString(GLASS_SESSION_ID_VAL);
-    const GLASS_SESSION_ID     = ref.ref(TERMINAL_SERVER_KEY_BUF);
+  const TERMINAL_SERVER_KEY_VAL = UTF8ToUTF16("SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\");
+  let   TERMINAL_SERVER_KEY_BUF = ref.alloc('CString');
+  TERMINAL_SERVER_KEY_BUF.writeCString(TERMINAL_SERVER_KEY_VAL);
+  const TERMINAL_SERVER_KEY     = ref.ref(TERMINAL_SERVER_KEY_BUF);
 
-    const KEY_READ = 0; // ? Not supported; set to 0. ? Microsoft Docs..WTF
+  const GLASS_SESSION_ID_VAL = UTF8ToUTF16("GlassSessionId");
+  let   GLASS_SEsSION_ID_BUF = ref.alloc('CString');
+  GLASS_SEsSION_ID_BUF.writeCString(GLASS_SESSION_ID_VAL);
+  const GLASS_SESSION_ID     = ref.ref(TERMINAL_SERVER_KEY_BUF);
 
-    const ERROR_SUCCESS = 0; // Is this an error ? Or a success ? Thanks Microsoft.
+  const KEY_READ = 0; // ? Not supported; set to 0. ? Microsoft Docs..WTF
 
-    let hRegKey = ref.alloc('void **');
+  const ERROR_SUCCESS = 0; // Is this an error ? Or a success ? Thanks Microsoft.
 
-    const libUser32 = ffi.Library('user32', {
+  let hRegKey = ref.alloc('void **');
+
+  const libUser32 = ffi.Library('user32', {
     'GetSystemMetrics': [
       'bool', [ 'int32' ]
     ],
