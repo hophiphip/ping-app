@@ -16,6 +16,12 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import initIPC from './ipc';
 
+const Sentry = require('@sentry/electron');
+
+Sentry.init({
+  dsn: 'https://046d2ec91c6a4176862f04f92181aeea@o1235060.ingest.sentry.io/6384896',
+});
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
