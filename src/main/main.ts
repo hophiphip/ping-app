@@ -16,11 +16,17 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import initIPC from './ipc';
 
+require('dotenv').config();
+
+const sentryDsn = process.env.SENTRY_DSN;
+
 const Sentry = require('@sentry/electron');
 
-Sentry.init({
-  dsn: 'https://046d2ec91c6a4176862f04f92181aeea@o1235060.ingest.sentry.io/6384896',
-});
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+  });
+}
 
 export default class AppUpdater {
   constructor() {
@@ -45,7 +51,7 @@ const isDebug =
 const logErr = (err: any) => {
   if (isDebug) console.log(err);
   else {
-    Sentry.captureException(err);
+    if (sentryDsn) Sentry.captureException(err);
     log.error(err);
   }
 };
