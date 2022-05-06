@@ -1,5 +1,8 @@
 {
   "name": "ping-app",
+  "author": "hophiphip",
+  "description": "Ping local hosts and test their status",
+  "version": "0.1.0",
   "main": "./dist/main/main.js",
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
