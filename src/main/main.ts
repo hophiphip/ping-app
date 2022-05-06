@@ -16,7 +16,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import initIPC from './ipc';
 
-
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

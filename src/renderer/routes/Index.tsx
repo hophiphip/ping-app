@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
-import { WithTranslation, withTranslation } from 'react-i18next';
-import Select from 'react-select'
+import { TFunction, WithTranslation, withTranslation } from 'react-i18next';
+import RefreshButton from 'renderer/components/RefreshButton';
+import Select from 'react-select';
 
 import i18next from '../i18n';
 
 import '../css/Index.css';
-import RefreshButton from 'renderer/components/RefreshButton';
 
-const Index: React.FC<WithTranslation> = ({ t }) => {
-  let languages = i18next.languages.map(language => ({
+interface Props {
+  t: TFunction<'translation', undefined>;
+}
+
+const Index: React.FC<WithTranslation> = ({ t }: Props) => {
+  const languages = i18next.languages.map((language) => ({
     value: language,
-    label: language
+    label: language,
   }));
 
   const [isRemote, setIsRemote] = useState(false);
@@ -19,7 +23,7 @@ const Index: React.FC<WithTranslation> = ({ t }) => {
 
   const onButtonClick = () => {
     window.electron.ipcRenderer.sendMessage('rdp-test', []);
-  }
+  };
 
   useEffect(() => {
     // Request update once on load
@@ -36,16 +40,28 @@ const Index: React.FC<WithTranslation> = ({ t }) => {
   }, []);
 
   return (
-    <div className='index'>
+    <div className="index">
       <header>
-        <RefreshButton onClick={onButtonClick}></RefreshButton>
-        <Select defaultValue={languages[0]} options={languages} onChange={value => i18next.changeLanguage(value?.value || i18next.language)}/>
+        <RefreshButton onClick={onButtonClick} />
+        <Select
+          defaultValue={languages[0]}
+          options={languages}
+          onChange={(value) =>
+            i18next.changeLanguage(value?.value || i18next.language)
+          }
+        />
       </header>
 
       <main>
-        <p><strong>{t('Timestamp')}:</strong> {timestamp}</p>
-        <p><strong>{t('Platform')}:</strong> {platform}</p>
-        <p><strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}</p>
+        <p>
+          <strong>{t('Timestamp')}:</strong> {timestamp}
+        </p>
+        <p>
+          <strong>{t('Platform')}:</strong> {platform}
+        </p>
+        <p>
+          <strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}
+        </p>
       </main>
     </div>
   );
