@@ -1,28 +1,53 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
+import ChainedBackend from "i18next-chained-backend";
+import HttpBackend from "i18next-http-backend";
+import resourcesToBackend from "i18next-resources-to-backend";
+
+const localI18n = {
+  en: {
+    translation: {
+      "Update button": "Request host system status",
+      "Timestamp": "Timestamp",
+      "Platform": "Platforms",
+      "Session": "Session",
+      "local": "local",
+      "remote": "remote"
+    }
+  },
+  ru: {
+    translation: {
+      "Update button": "Запрос состояния хоста",
+      "Timestamp": "Отметка времени",
+      "Platform": "Платформа",
+      "Session": "Сессия",
+      "local": "локальная",
+      "remote": "дистанционная "
+    }
+  },
+};
 
 export default () => {
   i18next
     .use(initReactI18next)
+    .use(ChainedBackend)
     .init({
-      resources: {
-        en: {
-          translation: {
-            "Update button": "Request host system status",
-            "Timestamp": "Timestamp",
-            "Platform": "Platforms",
-            "Session": "Session",
-            "local": "local",
-            "remote": "remote",
-          }
-        }
-      },
-
-      lng: "en",
-      fallbackLng: "en",
-
-      interpolation: {
-        escapeValue: false,
+      debug: true,
+      saveMissing: true,
+      saveMissingTo: 'current',
+      lng: 'en',
+      fallbackLng: 'en',
+      preload: ['en', 'ru'],
+      ns: ['translation'],
+      defaultNS: 'translation',
+      backend: {
+        backends: [
+          HttpBackend,
+          resourcesToBackend(localI18n)
+        ],
+        backendOptions: [{
+          loadPath: 'http://localhost:1212/locales/{{lng}}/{{ns}}.json'
+        }]
       }
     });
 };
