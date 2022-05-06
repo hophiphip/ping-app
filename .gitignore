@@ -33,6 +33,5 @@ build
 
 # Sentry
 .electron-symbols
-sentry.properties
 
 .env
