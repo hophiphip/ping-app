@@ -1,7 +1,7 @@
 {
   "Update button": "Request host system status",
   "Timestamp": "Timestamp",
-  "Platform": "Platforms",
+  "Platform": "Platform",
   "Session": "Session",
   "local": "local",
   "remote": "remote"

@@ -1,0 +1,26 @@
+.refresh {
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 3px;
+  appearance: none;
+  font-size: 1.3rem;
+  border: 1px solid darkgray;
+  transition: all ease-in 0.1s;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.refresh svg {
+  height: 1rem;
+  width: 1rem;
+  color: darkgray;
+}
+
+.refresh:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.refresh:active {
+  border: 1px solid rgb(96, 96, 230);
+}

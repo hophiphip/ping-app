@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react';
 import { WithTranslation, withTranslation } from 'react-i18next';
+import Select from 'react-select'
+
+import i18next from '../i18n';
 
 import '../css/Index.css';
+import RefreshButton from 'renderer/components/RefreshButton';
 
 const Index: React.FC<WithTranslation> = ({ t }) => {
+  let languages = i18next.languages.map(language => ({
+    value: language,
+    label: language
+  }));
+
   const [isRemote, setIsRemote] = useState(false);
   const [platform, setPlatform] = useState('');
   const [timestamp, setTimestamp] = useState('');
@@ -27,11 +36,17 @@ const Index: React.FC<WithTranslation> = ({ t }) => {
   }, []);
 
   return (
-    <div>
-      <button onClick={onButtonClick}>{t('Update button')}</button>
-      <p><strong>{t('Timestamp')}:</strong> {timestamp}</p>
-      <p><strong>{t('Platform')}:</strong> {platform}</p>
-      <p><strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}</p>
+    <div className='index'>
+      <header>
+        <RefreshButton onClick={onButtonClick}></RefreshButton>
+        <Select defaultValue={languages[0]} options={languages} onChange={value => i18next.changeLanguage(value?.value || i18next.language)}/>
+      </header>
+
+      <main>
+        <p><strong>{t('Timestamp')}:</strong> {timestamp}</p>
+        <p><strong>{t('Platform')}:</strong> {platform}</p>
+        <p><strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}</p>
+      </main>
     </div>
   );
 };
