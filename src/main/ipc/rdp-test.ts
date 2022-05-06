@@ -32,6 +32,7 @@ const isWindowsRDPEnv = (): boolean => {
 
   const ffi = require('ffi-napi');
   const ref = require('ref-napi');
+  const types = require('./win32-types');
 
   const SM_REMOTESESSION = 0x1000;
 
@@ -64,37 +65,37 @@ const isWindowsRDPEnv = (): boolean => {
 
   const libAdvapi32 = ffi.Library('advapi32', {
     'RegOpenKeyEx': [
-      'long', [       // LONG - long
-        'void *',     // HKEY - HANDLE - PVOID - void*
-        'wchar_t *',  // LPCWSTR - CONST WCHAR* - const wchar_t*
-        'ulong',      // DWORD - unsigned long
-        'ulong',      // REGSAM - ULONG - unsigned long
-        'void **'     // PHKEY - HKEY* - HANDLE* - PVOID* - void**
+      'long', [        // LONG
+        'longlong',    // HKEY
+        'string',      // LPCWSTR
+        types.DWORD,   // DWORD
+        types.REGSAM,  // REGSAM
+        types.PHKEY    // PHKEY
       ]
     ],
     'RegQueryValueEx': [
-      'long', [      // LONG
-        'void *',    // HKEY
-        'wchar_t *', // LPCWSTR
-        'long *',    // LPDWORD
-        'long *',    // LPDWORD
-        'byte *',    // LPBYTE
-        'long *',    // LPDWORD
+      'long', [         // LONG
+        types.HKEY,     // HKEY
+        'string',       // LPCWSTR
+        'pointer',      // LPDWORD
+        types.LPDWORD,  // LPDWORD
+        types.LPBYTE,   // LPBYTE
+        types.LPDWORD,  // LPDWORD
       ]
     ],
     'ProcessIdToSessionId': [
-      'bool', [    // BOOL
-        'ulong',   // DWORD
-        'ulong *', // DWORD*
+      'bool', [        // BOOL
+        types.DWORD,   // DWORD
+        types.LPDWORD, // DWORD*
       ]
     ],
     'RegCloseKey': [
       'void', [
-        'void *' // HKEY
+        types.HKEY // HKEY
       ]
     ],
     'GetCurrentProcessId': [
-      'ulong', [ // DWORD
+      types.DWORD, [ // DWORD
         'void'
       ]
     ]
