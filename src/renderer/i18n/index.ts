@@ -4,6 +4,9 @@ import ChainedBackend from "i18next-chained-backend";
 import HttpBackend from "i18next-http-backend";
 import resourcesToBackend from "i18next-resources-to-backend";
 
+/**
+ * I18n translations that are used when http-translation fetch has failed.
+ */
 const localI18n = {
   en: {
     translation: {
@@ -46,9 +49,9 @@ export default () => {
           resourcesToBackend(localI18n)
         ],
         backendOptions: [{
-          loadPath: 'http://localhost:1212/locales/{{lng}}/{{ns}}.json'
+          loadPath: 'https://raw.githubusercontent.com/hophiphip/ping-app/master/public/locales/{{lng}}/{{ns}}.json'
         }]
-      }
+      },
     });
 };
 
