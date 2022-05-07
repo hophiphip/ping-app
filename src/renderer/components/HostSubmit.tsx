@@ -19,7 +19,7 @@ const HostSubmit = ({ onSubmit, value, onNewAddress }: Props) => {
       />
 
       <button className="submit" type="submit">
-        Add
+        {i18next.t('Add')}
       </button>
     </form>
   );
