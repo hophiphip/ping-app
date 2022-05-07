@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "ffi-napi": "^4.0.3",
-    "ref-napi": "^3.0.3"
+    "ref-napi": "^3.0.3",
+    "super-tiny-icons": "^0.4.0"
   },
   "license": "MIT"
 }
