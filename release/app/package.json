@@ -10,7 +10,6 @@
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
   "dependencies": {
-    "npm-platform-dependencies": "^0.1.0",
     "ffi-napi": "^4.0.3",
     "ref-napi": "^3.0.3"
   },
