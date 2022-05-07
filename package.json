@@ -31,7 +31,7 @@
   },
   "build": {
     "productName": "PingApp",
-    "appId": "org.erb.PingApp",
+    "appId": "org.hophiphip.PingApp",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -88,8 +88,18 @@
       "./assets/**"
     ],
     "publish": {
-      "provider": "github"
+      "provider": "github",
+      "owner": "hophiphip",
+      "repo": "ping-app"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hophiphip/ping-app.git"
+  },
+  "author": {
+    "name": "hophiphip",
+    "email": "nighop@yandex.ru"
   },
   "license": "MIT",
   "keywords": [
@@ -102,6 +112,7 @@
     "hot",
     "reload"
   ],
+  "homepage": "https://github.com/hophiphip/ping-app#readme",
   "jest": {
     "testURL": "http://localhost/",
     "testEnvironment": "jsdom",
@@ -217,6 +228,7 @@
     "i18next-http-backend": "^1.4.0",
     "i18next-resources-to-backend": "^1.0.0",
     "ip": "^1.1.5",
+    "is-ip": "^4.0.0",
     "ping": "^0.4.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

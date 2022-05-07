@@ -13,6 +13,7 @@ const Platform = ({ platform, remSize = 2 }: Props) => {
   const iconStyle = {
     width: `${remSize}rem`,
     height: `${remSize}rem`,
+    filter: `grayscale(60%)`,
   };
 
   let logo;

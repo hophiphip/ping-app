@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { TFunction, WithTranslation, withTranslation } from 'react-i18next';
-import RefreshButton from 'renderer/components/RefreshButton';
-import Platform from 'renderer/components/Platform';
 import Select from 'react-select';
+import { isIP } from 'is-ip';
+import HostSubmit from 'renderer/components/HostSubmit';
+import HostList from 'renderer/components/HostList';
+import RefreshButton from '../components/RefreshButton';
+import Platform from '../components/Platform';
+import Host from '../models/Host';
 
 import i18next from '../i18n';
 
@@ -10,11 +14,6 @@ import '../css/Index.css';
 
 interface Props {
   t: TFunction<'translation', undefined>;
-}
-
-interface Host {
-  host: string;
-  status: boolean;
 }
 
 const Index: React.FC<WithTranslation> = ({ t }: Props) => {
@@ -47,7 +46,11 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
 
   const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    setHosts([...hosts, { host: addressInput, status: false }]);
+
+    if (isIP(addressInput)) {
+      setHosts([...hosts, { host: addressInput, status: false }]);
+    }
+
     setAddressInput('');
   };
 
@@ -100,25 +103,13 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
         <h2>{t('IP address')}</h2>
         <h1>{address}</h1>
 
-        <div>
-          {hosts.map((host) => {
-            return (
-              <div key={host.host}>
-                {host.host} {host.status ? 'up' : 'down'}
-              </div>
-            );
-          })}
-        </div>
+        <HostList hosts={hosts} />
 
-        <form onSubmit={onSubmit}>
-          <input
-            value={addressInput}
-            type="text"
-            onChange={onNewAddress}
-            placeholder="Enter pingable address.."
-          />
-          <button type="submit">Add</button>
-        </form>
+        <HostSubmit
+          onSubmit={onSubmit}
+          value={addressInput}
+          onNewAddress={onNewAddress}
+        />
       </main>
     </div>
   );

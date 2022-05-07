@@ -6,5 +6,7 @@
   "local": "local",
   "remote": "remote",
   "Unknown OS": "Unknown platform",
-  "IP address": "Your IP address is"
+  "IP address": "Your IP address is",
+  "Enter pingable address": "Enter pingable address",
+  "Add": "Add"
 }

@@ -6,5 +6,7 @@
   "local": "локальная",
   "remote": "дистанционная",
   "Unknown OS": "Неизвестная платформа",
-  "IP address": "Ваш IP-адрес"
+  "IP address": "Ваш IP-адрес",
+  "Enter pingable address": "Введите адрес",
+  "Add": "Добавить"
 }

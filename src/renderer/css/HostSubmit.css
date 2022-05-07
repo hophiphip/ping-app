@@ -1,0 +1,35 @@
+.form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
+.input {
+  font-size: 1.5rem;
+  height: 2rem;
+  color: darkgray;
+  border: 1px solid darkgray;
+}
+
+.submit {
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 3px;
+  appearance: none;
+  font-size: 1.3rem;
+  border: 1px solid darkgray;
+  transition: all ease-in 0.1s;
+  cursor: pointer;
+  color: darkgray;
+  opacity: 0.9;
+  height: 2.4rem;
+  align-items: center;
+  align-content: center;
+}
+
+.submit:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
