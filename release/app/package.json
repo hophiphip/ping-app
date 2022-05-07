@@ -10,7 +10,11 @@
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
   "dependencies": {
-    "ffi-napi": "^4.0.3"
+    "npm-platform-dependencies": "^0.1.0"
+  },
+  "win32Dependencies": {
+    "ffi-napi": "^4.0.3",
+    "ref-napi": "^3.0.3"
   },
   "license": "MIT"
 }

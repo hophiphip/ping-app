@@ -30,8 +30,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "PingApp",
+    "appId": "org.erb.PingApp",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [

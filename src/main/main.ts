@@ -12,21 +12,10 @@ import path from 'path';
 import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import * as Sentry from '@sentry/electron/main';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import initIPC from './ipc';
-
-require('dotenv').config();
-
-const sentryDsn = process.env.SENTRY_DSN;
-
-const Sentry = require('@sentry/electron');
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-  });
-}
 
 export default class AppUpdater {
   constructor() {
@@ -47,6 +36,18 @@ if (process.env.NODE_ENV === 'production') {
 
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
+if (isDebug) {
+  require('dotenv').config();
+}
+
+const sentryDsn = process.env.SENTRY_DSN;
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+  });
+}
 
 const logErr = (err: any) => {
   if (isDebug) console.log(err);
