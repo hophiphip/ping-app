@@ -25,7 +25,7 @@ npm run package
 ### Logging
 
 - Application monitoring is done with [Sentry](https://sentry.io)
-- Loggin library is [electron-log](https://github.com/megahertz/electron-log).
+- Logging library is [electron-log](https://github.com/megahertz/electron-log).
   By default, it writes logs to the following locations:
 
   - on Linux: `~/.config/ping-app/logs/{process type}.log`
