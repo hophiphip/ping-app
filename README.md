@@ -9,7 +9,7 @@ npm install -g node-gyp
 Start the app in the `dev` environment:
 
 ```shell
-npm start
+npm run start
 ```
 
 ## Packaging for Production
