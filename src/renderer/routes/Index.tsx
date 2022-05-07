@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { TFunction, WithTranslation, withTranslation } from 'react-i18next';
 import RefreshButton from 'renderer/components/RefreshButton';
+import Platform from 'renderer/components/Platform';
 import Select from 'react-select';
 
 import i18next from '../i18n';
@@ -19,10 +20,11 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
 
   const [isRemote, setIsRemote] = useState(false);
   const [platform, setPlatform] = useState('');
-  const [timestamp, setTimestamp] = useState('');
+  const [address, setAddress] = useState('');
 
   const onButtonClick = () => {
     window.electron.ipcRenderer.sendMessage('rdp-test', []);
+    window.electron.ipcRenderer.sendMessage('host-ip', []);
   };
 
   useEffect(() => {
@@ -33,9 +35,14 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
     window.electron.ipcRenderer.on('rdp-test', (data) => {
       const values = JSON.parse(String(data));
 
-      setTimestamp(`${values.timestamp}`);
       setIsRemote(values.isRdp);
       setPlatform(values.platform);
+    });
+
+    window.electron.ipcRenderer.on('host-ip', (data) => {
+      const values = JSON.parse(String(data));
+
+      setAddress(values.ip);
     });
   }, []);
 
@@ -43,6 +50,7 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
     <div className="index">
       <header>
         <RefreshButton onClick={onButtonClick} />
+
         <Select
           defaultValue={languages[0]}
           options={languages}
@@ -50,18 +58,17 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
             i18next.changeLanguage(value?.value || i18next.language)
           }
         />
-      </header>
 
-      <main>
-        <p>
-          <strong>{t('Timestamp')}:</strong> {timestamp}
-        </p>
-        <p>
-          <strong>{t('Platform')}:</strong> {platform}
-        </p>
         <p>
           <strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}
         </p>
+
+        <Platform platform={platform} remSize={2.375} />
+      </header>
+
+      <main>
+        <h2>{t('IP address')}</h2>
+        <h1>{address}</h1>
       </main>
     </div>
   );

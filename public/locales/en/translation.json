@@ -4,5 +4,7 @@
   "Platform": "Platform",
   "Session": "Session",
   "local": "local",
-  "remote": "remote"
+  "remote": "remote",
+  "Unknown OS": "Unknown platform",
+  "IP address": "Your IP address is"
 }

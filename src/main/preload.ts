@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export type Channels = 'rdp-test';
+export type Channels = 'rdp-test' | 'host-ip';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
