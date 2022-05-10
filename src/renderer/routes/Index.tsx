@@ -55,11 +55,11 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
   };
 
   useEffect(() => {
-    // Request update once on load
+    // Request update only once on load
     window.electron.ipcRenderer.sendMessage('rdp-test', []);
     window.electron.ipcRenderer.sendMessage('host-ip', []);
 
-    // Listen for responses
+    // Listen for RDP tester responses
     window.electron.ipcRenderer.on('rdp-test', (data) => {
       const values = JSON.parse(String(data));
 
@@ -67,12 +67,14 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
       setPlatform(values.platform);
     });
 
+    // List for host network info responses
     window.electron.ipcRenderer.on('host-ip', (data) => {
       const values = JSON.parse(String(data));
 
       setAddress(values.ip);
     });
 
+    // Listen for ping tester responses
     window.electron.ipcRenderer.on('ping', (data) => {
       const response = JSON.parse(String(data)) as Host[];
       setHosts(response);

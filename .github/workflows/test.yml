@@ -20,6 +20,10 @@ jobs:
           node-version: 16
           cache: npm
 
+      - if: ${{ matrix.os == 'linux' }}
+        name: Install build essential package
+        run: sudo apt update && sudo apt install build-essential --fix-missing
+
       - name: npm install
         run: |
           npm install
