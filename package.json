@@ -141,7 +141,7 @@
       "./.erb/scripts/check-build-exists.ts"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(react-native|is-ip|ip-regex)/)"
+      "node_modules/(?!(react|is-ip|ip-regex)/)"
     ]
   },
   "devDependencies": {

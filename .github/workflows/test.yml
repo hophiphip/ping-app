@@ -21,7 +21,7 @@ jobs:
           cache: npm
 
       - if: ${{ matrix.os == 'linux' }}
-        name: Install build essential package
+        name: Install build essential packages
         run: sudo apt update && sudo apt -y install build-essential --fix-missing
 
       - name: npm install
