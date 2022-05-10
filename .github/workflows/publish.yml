@@ -29,7 +29,7 @@ jobs:
 
       - if: ${{ matrix.os == 'linux' }}
         name: Install build essential package
-        run: sudo apt update && sudo apt install build-essential --fix-missing
+        run: sudo apt update && sudo apt -y install build-essential --fix-missing
 
       - name: Install dependencies
         run: |
