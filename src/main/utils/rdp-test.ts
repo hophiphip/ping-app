@@ -18,28 +18,19 @@ export const isWindowsRDPEnv = (): boolean => {
 
   const SM_REMOTESESSION = 0x1000;
 
-  const HKEY_LOCAL_MACHINE_VAL = 0x80000002; // uint
-  const HKEY_LOCAL_MACHINE_BUF = ref.alloc('int');
-  HKEY_LOCAL_MACHINE_BUF.writeUInt32LE(HKEY_LOCAL_MACHINE_VAL, 0); // TODO: But what if machine is big-endian ?
-  const HKEY_LOCAL_MACHINE = ref.ref(HKEY_LOCAL_MACHINE_BUF);
+  const HKEY_LOCAL_MACHINE = 0x80000002;
 
-  const TERMINAL_SERVER_KEY_VAL = UTF8ToUTF16(
+  const TERMINAL_SERVER_KEY = UTF8ToUTF16(
     'SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\'
   );
-  const TERMINAL_SERVER_KEY_BUF = ref.alloc('CString');
-  TERMINAL_SERVER_KEY_BUF.writeCString(TERMINAL_SERVER_KEY_VAL);
-  const TERMINAL_SERVER_KEY = ref.ref(TERMINAL_SERVER_KEY_BUF);
 
-  const GLASS_SESSION_ID_VAL = UTF8ToUTF16('GlassSessionId');
-  const GLASS_SESSION_ID_BUF = ref.alloc('CString');
-  GLASS_SESSION_ID_BUF.writeCString(GLASS_SESSION_ID_VAL);
-  const GLASS_SESSION_ID = ref.ref(TERMINAL_SERVER_KEY_BUF);
+  const GLASS_SESSION_ID = UTF8ToUTF16('GlassSessionId');
 
-  const KEY_READ = 0; // Docs say that it is unsupported key with default value of 0.
+  const KEY_READ = 0x20019;
 
-  const ERROR_SUCCESS = 0; // Is this an error ? Or a success ? Thanks Microsoft.
+  const ERROR_SUCCESS = 0; // Is this an error ? Or a success ?
 
-  const hRegKey = ref.alloc('void **');
+  const hRegKey = ref.alloc(types.PHKEY, Buffer.alloc(ref.sizeof.pointer));
 
   const libUser32 = ffi.Library('user32', {
     GetSystemMetrics: ['bool', ['int32']],
@@ -70,7 +61,7 @@ export const isWindowsRDPEnv = (): boolean => {
       ],
     ],
     RegCloseKey: [
-      'void',
+      'long',
       [
         types.HKEY, // HKEY
       ],
@@ -102,11 +93,11 @@ export const isWindowsRDPEnv = (): boolean => {
   let isRemoteable = false;
 
   let lResult = libAdvapi32.RegOpenKeyExA(
-    HKEY_LOCAL_MACHINE,
-    TERMINAL_SERVER_KEY,
-    0,
-    KEY_READ,
-    hRegKey
+    HKEY_LOCAL_MACHINE, // predefined key
+    TERMINAL_SERVER_KEY, // sub key name
+    0, // whatever unsupported crap
+    KEY_READ, // access level
+    hRegKey // pHkey
   );
 
   if (lResult === ERROR_SUCCESS) {
@@ -122,11 +113,11 @@ export const isWindowsRDPEnv = (): boolean => {
 
     lResult = libAdvapi32.RegQueryValueExA(
       hRegKey,
-      GLASS_SESSION_ID,
-      ref.NULL_POINTER,
-      dwTypePtr,
-      dwGlassSessionIdPtr,
-      cbGlassSessionIdPtr
+      GLASS_SESSION_ID, // value name
+      null, // NULL ptr
+      dwTypePtr, // key type
+      dwGlassSessionIdPtr, // session id
+      cbGlassSessionIdPtr // key data length
     );
 
     if (lResult === ERROR_SUCCESS) {
