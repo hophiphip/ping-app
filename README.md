@@ -6,6 +6,12 @@ Install [Node.js Foreign Function Interface for N-API](https://github.com/node-f
 npm install -g node-gyp
 ```
 
+Install dependencies:
+
+```shell
+npm install
+```
+
 Start the app in the `dev` environment:
 
 ```shell
