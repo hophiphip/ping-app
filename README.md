@@ -14,7 +14,7 @@ npm run start
 
 ## Packaging for Production
 
-To package apps for the local platform:
+To package app for the local platform:
 
 ```shell
 npm run package

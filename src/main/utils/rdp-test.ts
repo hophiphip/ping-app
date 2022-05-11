@@ -1,12 +1,12 @@
 import UTF8ToUTF16 from './utf8-to-utf16';
 
-const ffi = process.platform !== 'win32' ? undefined : require('ffi-napi');
+const ffi = process.platform !== 'win32' ? undefined : require('ffi-napi'); // NOTE: I guess mixing different imports is bad: mb. try: import('ffi-napi').then(...)
 const ref = process.platform !== 'win32' ? undefined : require('ref-napi');
 const types =
   process.platform !== 'win32' ? undefined : require('../types/win32');
 
 /**
- * Test if application in Windows OS runs in RDP service environment.
+ * Test if application in Windows OS runs in terminial service environment.
  *  Reference: https://docs.microsoft.com/en-us/windows/win32/termserv/detecting-the-terminal-services-environment
  * @returns Boolean
  */
@@ -20,7 +20,7 @@ export const isWindowsRDPEnv = (): boolean => {
 
   const HKEY_LOCAL_MACHINE_VAL = 0x80000002; // uint
   const HKEY_LOCAL_MACHINE_BUF = ref.alloc('int');
-  HKEY_LOCAL_MACHINE_BUF.writeUInt32LE(HKEY_LOCAL_MACHINE_VAL, 0);
+  HKEY_LOCAL_MACHINE_BUF.writeUInt32LE(HKEY_LOCAL_MACHINE_VAL, 0); // TODO: But what if machine is big-endian ?
   const HKEY_LOCAL_MACHINE = ref.ref(HKEY_LOCAL_MACHINE_BUF);
 
   const TERMINAL_SERVER_KEY_VAL = UTF8ToUTF16(
@@ -35,7 +35,7 @@ export const isWindowsRDPEnv = (): boolean => {
   GLASS_SESSION_ID_BUF.writeCString(GLASS_SESSION_ID_VAL);
   const GLASS_SESSION_ID = ref.ref(TERMINAL_SERVER_KEY_BUF);
 
-  const KEY_READ = 0; // ? Not supported; set to 0. ? Microsoft Docs..WTF
+  const KEY_READ = 0; // Docs say that it is unsupported key with default value of 0.
 
   const ERROR_SUCCESS = 0; // Is this an error ? Or a success ? Thanks Microsoft.
 
@@ -154,8 +154,8 @@ export const isWindowsRDPEnv = (): boolean => {
 };
 
 /**
- * Test if application in Unix-like os runs in RDP service environment.
- * During RDP/Remote session display environment variable must be different from the default one.
+ * Test if application in Unix-like OS started in RDP/VNC session.
+ * During remote session display environment variable must be different from the default one.
  * @returns boolean
  */
 export const isUnixRDPEnv = (): boolean => {
@@ -164,8 +164,8 @@ export const isUnixRDPEnv = (): boolean => {
 };
 
 /**
- * Test if app is running under remote services.
- * @returns boolean indicating whether app is running under remote services.
+ * Test if app was started from remote session.
+ * @returns boolean indicating whether app was started from remote session.
  */
 export const isRdp = (): boolean => {
   switch (process.platform) {
