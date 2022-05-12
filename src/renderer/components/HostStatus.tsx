@@ -1,16 +1,16 @@
 import '../css/HostStatus.css';
 
 interface Props {
-  host: string;
+  address: string;
   status: boolean;
 }
 
-const HostStatus = ({ host, status }: Props) => {
+const HostStatus = ({ address, status }: Props) => {
   return (
-    <div className="host">
-      {host}
+    <li className="host">
+      {address}
 
-      <div style={{ flexGrow: 1 }} />
+      <div className="padding" />
 
       {status ? (
         <div className="icon up">
@@ -43,7 +43,7 @@ const HostStatus = ({ host, status }: Props) => {
           </svg>
         </div>
       )}
-    </div>
+    </li>
   );
 };
 

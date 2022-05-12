@@ -7,17 +7,17 @@ interface Props {
 
 const HostList = ({ hosts }: Props) => {
   return (
-    <div className="host-list">
+    <ul className="host-list">
       {hosts.map((host) => {
         return (
           <HostStatus
             key={`${host.host}-${Date.now()}`}
-            host={host.host}
+            address={host.host}
             status={host.status}
           />
         );
       })}
-    </div>
+    </ul>
   );
 };
 

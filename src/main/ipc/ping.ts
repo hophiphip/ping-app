@@ -5,11 +5,11 @@ const net = require('net');
 
 export default () => {
   ipcMain.on('ping', async (event, arg) => {
-    // Try-ping all args
+    // Try to ping all args
     const stats = await Promise.all(
       // Remove duplicates
       ([...new Set(arg)] as string[])
-        // Remote non-IP address values
+        // Remove non-IP address values
         .filter((address: string) => net.isIP(address))
         .map(
           async (
