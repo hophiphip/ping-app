@@ -10,11 +10,14 @@ const useHostStatus = (address: string) => {
   const [host, setHost] = useState<Host>({ host: address, status: false });
 
   useEffect(() => {
-    window.electron.ipcRenderer.sendMessage('ping', [host.host]);
+    window.electron.ipcRenderer.sendMessage('ping-one', [host.host]);
 
-    window.electron.ipcRenderer.on('ping', (data) => {
-      const response = JSON.parse(String(data)) as Host[];
-      setHost(response[0]);
+    window.electron.ipcRenderer.on('ping-one', (data) => {
+      const response = JSON.parse(String(data)) as Host;
+
+      if (response.host === host.host) {
+        setHost(response);
+      }
     });
   }, [host]);
 
@@ -26,7 +29,7 @@ const useHostStatus = (address: string) => {
   const updateHost = (status?: boolean) => {
     if (status !== undefined) setHost({ host: host.host, status });
     else {
-      window.electron.ipcRenderer.sendMessage('ping', [host.host]);
+      window.electron.ipcRenderer.sendMessage('ping-one', [host.host]);
     }
   };
 

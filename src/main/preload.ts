@@ -1,21 +1,69 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
+import PingResult from '../shared/PingResult';
+import RdpTestResult from '../shared/RdpTestResult';
 
-export type Channels = 'rdp-test' | 'host-ip' | 'ping';
+import {
+  RdpTestChannel,
+  RdpTestChannelSuccess,
+  HostIpChannel,
+  HostIpChannelSuccess,
+  PingOneChannel,
+  PingChannelSuccess,
+  PingChannel,
+  PingOneChannelSuccess,
+  LogErrChannel,
+} from './channels';
+
+export type ContextBridgeApi = {
+  isRdp: () => Promise<RdpTestResult>;
+  hostIp: () => Promise<string>;
+  isAlive: (address: string) => Promise<PingResult>;
+  isAliveAll: (addresses: string[]) => Promise<PingResult[]>;
+  logErr: (err: any) => void;
+};
+
+const contextBridgeApi: ContextBridgeApi = {
+  isRdp: () => {
+    ipcRenderer.send(RdpTestChannel);
+    return new Promise((resolve) => {
+      ipcRenderer.once(RdpTestChannelSuccess, (_, data: RdpTestResult) =>
+        resolve(data)
+      );
+    });
+  },
+
+  hostIp: () => {
+    ipcRenderer.send(HostIpChannel);
+    return new Promise((resolve) => {
+      ipcRenderer.once(HostIpChannelSuccess, (_, data: string) =>
+        resolve(data)
+      );
+    });
+  },
+
+  isAlive: (host: string) => {
+    ipcRenderer.send(PingOneChannel, host);
+    return new Promise((resolve) => {
+      ipcRenderer.once(PingOneChannelSuccess, (_, data: PingResult) =>
+        resolve(data)
+      );
+    });
+  },
+
+  isAliveAll: (hosts: string[]) => {
+    ipcRenderer.send(PingChannel, hosts);
+    return new Promise((resolve) => {
+      ipcRenderer.once(PingChannelSuccess, (_, data: PingResult[]) =>
+        resolve(data)
+      );
+    });
+  },
+
+  logErr: (err: any) => {
+    ipcRenderer.send(LogErrChannel, err);
+  },
+};
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer: {
-    sendMessage(channel: Channels, args: unknown[]) {
-      ipcRenderer.send(channel, args);
-    },
-    on(channel: Channels, func: (...args: unknown[]) => void) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
-        func(...args);
-      ipcRenderer.on(channel, subscription);
-
-      return () => ipcRenderer.removeListener(channel, subscription);
-    },
-    once(channel: Channels, func: (...args: unknown[]) => void) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
-  },
+  ipcRenderer: contextBridgeApi,
 });

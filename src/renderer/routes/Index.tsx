@@ -11,6 +11,7 @@ import Host from '../models/Host';
 import i18next from '../i18n';
 
 import '../css/Index.css';
+import Session from '../components/Session';
 
 interface Props {
   t: TFunction<'translation', undefined>;
@@ -31,13 +32,35 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
   const [hosts, setHosts] = useState<Host[]>(initialHosts);
 
   const onButtonClick = () => {
-    window.electron.ipcRenderer.sendMessage('rdp-test', []);
-    window.electron.ipcRenderer.sendMessage('host-ip', []);
+    window.electron.ipcRenderer
+      .isRdp()
+      .then((result) => {
+        setIsRemote(result.isRdp);
+        setPlatform(result.platform);
+        return result;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
 
-    window.electron.ipcRenderer.sendMessage(
-      'ping',
-      hosts.map((host) => host.host)
-    );
+    window.electron.ipcRenderer
+      .isAliveAll(hosts.map((host) => host.host))
+      .then((scannedHosts) => {
+        setHosts(
+          scannedHosts.map((host) => ({
+            host: host.address,
+            status: host.isAlive,
+          }))
+        );
+        return hosts;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
+
+    window.electron.ipcRenderer
+      .hostIp()
+      .then((host) => {
+        setAddress(host);
+        return host;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
   };
 
   const onNewAddress = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,30 +78,37 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
   };
 
   useEffect(() => {
-    // Request update only once on load
-    window.electron.ipcRenderer.sendMessage('rdp-test', []);
-    window.electron.ipcRenderer.sendMessage('host-ip', []);
+    window.electron.ipcRenderer
+      .isRdp()
+      .then((result) => {
+        setIsRemote(result.isRdp);
+        setPlatform(result.platform);
+        return result;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
 
-    // Listen for RDP tester responses
-    window.electron.ipcRenderer.on('rdp-test', (data) => {
-      const values = JSON.parse(String(data));
+    window.electron.ipcRenderer
+      .isAliveAll(hosts.map((host) => host.host))
+      .then((scannedHosts) => {
+        setHosts(
+          scannedHosts.map((host) => ({
+            host: host.address,
+            status: host.isAlive,
+          }))
+        );
+        return hosts;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
 
-      setIsRemote(values.isRdp);
-      setPlatform(values.platform);
-    });
+    window.electron.ipcRenderer
+      .hostIp()
+      .then((host) => {
+        setAddress(host);
+        return host;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
 
-    // List for host network info responses
-    window.electron.ipcRenderer.on('host-ip', (data) => {
-      const values = JSON.parse(String(data));
-
-      setAddress(values.ip);
-    });
-
-    // Listen for ping tester responses
-    window.electron.ipcRenderer.on('ping', (data) => {
-      const response = JSON.parse(String(data)) as Host[];
-      setHosts(response);
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -94,9 +124,7 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
           }
         />
 
-        <p>
-          <strong>{t('Session')}:</strong> {isRemote ? t('remote') : t('local')}
-        </p>
+        <Session isRemote={isRemote} />
 
         <Platform platform={platform} remSize={2.375} />
       </header>
