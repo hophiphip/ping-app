@@ -10,15 +10,16 @@ const useHostStatus = (address: string) => {
   const [host, setHost] = useState<Host>({ host: address, status: false });
 
   useEffect(() => {
-    window.electron.ipcRenderer.sendMessage('ping-one', [host.host]);
+    window.electron.ipcRenderer
+      .isAlive(host.host)
+      .then((result) => {
+        if (result.address === host.host) {
+          setHost({ host: host.host, status: result.isAlive });
+        }
 
-    window.electron.ipcRenderer.on('ping-one', (data) => {
-      const response = JSON.parse(String(data)) as Host;
-
-      if (response.host === host.host) {
-        setHost(response);
-      }
-    });
+        return result;
+      })
+      .catch((err) => window.electron.ipcRenderer.logErr(err));
   }, [host]);
 
   /**
@@ -29,7 +30,16 @@ const useHostStatus = (address: string) => {
   const updateHost = (status?: boolean) => {
     if (status !== undefined) setHost({ host: host.host, status });
     else {
-      window.electron.ipcRenderer.sendMessage('ping-one', [host.host]);
+      window.electron.ipcRenderer
+        .isAlive(host.host)
+        .then((result) => {
+          if (result.address === host.host) {
+            setHost({ host: host.host, status: result.isAlive });
+          }
+
+          return result;
+        })
+        .catch((err) => window.electron.ipcRenderer.logErr(err));
     }
   };
 
