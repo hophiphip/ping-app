@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TFunction, WithTranslation, withTranslation } from 'react-i18next';
 import Select from 'react-select';
 import { isIP } from 'is-ip';
-import useHostsStatuses from 'renderer/hooks/useHostsStatuses';
+import useHostsStatuses from '../hooks/useHostsStatuses';
 import HostSubmit from '../components/HostSubmit';
 import HostList from '../components/HostList';
 import RefreshButton from '../components/RefreshButton';
