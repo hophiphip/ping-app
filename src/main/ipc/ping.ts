@@ -1,9 +1,8 @@
 import { ipcMain } from 'electron';
 import ping from 'ping';
+import net from 'net';
 import { PingChannel, PingChannelSuccess } from '../channels';
 import PingResult from '../../shared/PingResult';
-
-const net = require('net');
 
 export default () => {
   ipcMain.on(PingChannel, async (event, addresses: string[]) => {

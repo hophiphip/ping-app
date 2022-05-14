@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { TFunction, WithTranslation, withTranslation } from 'react-i18next';
 import Select from 'react-select';
 import { isIP } from 'is-ip';
+import useHostsStatuses from 'renderer/hooks/useHostsStatuses';
 import HostSubmit from '../components/HostSubmit';
 import HostList from '../components/HostList';
 import RefreshButton from '../components/RefreshButton';
 import Platform from '../components/Platform';
-import Host from '../models/Host';
 
 import i18next from '../i18n';
 
@@ -26,25 +26,13 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
 
   const [session, updateSession] = useSessionState();
   const [addressInput, setAddressInput] = useState('');
-
-  const initialHosts: Host[] = [{ host: '127.0.0.1', status: false }];
-  const [hosts, setHosts] = useState<Host[]>(initialHosts);
+  const { hosts, addHost, updateHostsSync } = useHostsStatuses({
+    initial: [{ host: '127.0.0.1', status: false }],
+  });
 
   const onButtonClick = () => {
     updateSession();
-
-    window.electron.ipcRenderer
-      .isAliveAll(hosts.map((host) => host.host))
-      .then((scannedHosts) => {
-        setHosts(
-          scannedHosts.map((host) => ({
-            host: host.address,
-            status: host.isAlive,
-          }))
-        );
-        return hosts;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
+    updateHostsSync();
   };
 
   const onNewAddress = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +43,7 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
     evt.preventDefault();
 
     if (isIP(addressInput)) {
-      setHosts([...hosts, { host: addressInput, status: false }]);
+      addHost({ host: addressInput, status: false });
     }
 
     setAddressInput('');
@@ -63,20 +51,7 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
 
   useEffect(() => {
     updateSession();
-
-    window.electron.ipcRenderer
-      .isAliveAll(hosts.map((host) => host.host))
-      .then((scannedHosts) => {
-        setHosts(
-          scannedHosts.map((host) => ({
-            host: host.address,
-            status: host.isAlive,
-          }))
-        );
-        return hosts;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
-
+    updateHostsSync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
