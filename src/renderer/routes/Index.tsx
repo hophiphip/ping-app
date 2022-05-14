@@ -12,6 +12,7 @@ import i18next from '../i18n';
 
 import '../css/Index.css';
 import Session from '../components/Session';
+import useSessionState from '../hooks/useSessionState';
 
 interface Props {
   t: TFunction<'translation', undefined>;
@@ -23,23 +24,14 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
     label: language,
   }));
 
-  const [isRemote, setIsRemote] = useState(false);
-  const [platform, setPlatform] = useState('');
-  const [address, setAddress] = useState('');
+  const [session, updateSession] = useSessionState();
   const [addressInput, setAddressInput] = useState('');
 
   const initialHosts: Host[] = [{ host: '127.0.0.1', status: false }];
   const [hosts, setHosts] = useState<Host[]>(initialHosts);
 
   const onButtonClick = () => {
-    window.electron.ipcRenderer
-      .isRdp()
-      .then((result) => {
-        setIsRemote(result.isRdp);
-        setPlatform(result.platform);
-        return result;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
+    updateSession();
 
     window.electron.ipcRenderer
       .isAliveAll(hosts.map((host) => host.host))
@@ -51,14 +43,6 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
           }))
         );
         return hosts;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
-
-    window.electron.ipcRenderer
-      .hostIp()
-      .then((host) => {
-        setAddress(host);
-        return host;
       })
       .catch((err) => window.electron.ipcRenderer.logErr(err));
   };
@@ -78,14 +62,7 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
   };
 
   useEffect(() => {
-    window.electron.ipcRenderer
-      .isRdp()
-      .then((result) => {
-        setIsRemote(result.isRdp);
-        setPlatform(result.platform);
-        return result;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
+    updateSession();
 
     window.electron.ipcRenderer
       .isAliveAll(hosts.map((host) => host.host))
@@ -97,14 +74,6 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
           }))
         );
         return hosts;
-      })
-      .catch((err) => window.electron.ipcRenderer.logErr(err));
-
-    window.electron.ipcRenderer
-      .hostIp()
-      .then((host) => {
-        setAddress(host);
-        return host;
       })
       .catch((err) => window.electron.ipcRenderer.logErr(err));
 
@@ -124,14 +93,14 @@ const Index: React.FC<WithTranslation> = ({ t }: Props) => {
           }
         />
 
-        <Session isRemote={isRemote} />
+        <Session isRemote={session.isRemote} />
 
-        <Platform platform={platform} remSize={2.375} />
+        <Platform platform={session.platform} remSize={2.375} />
       </header>
 
       <main>
         <h2>{t('IP address')}</h2>
-        <h1>{address}</h1>
+        <h1>{session.address}</h1>
 
         <HostList hosts={hosts} />
 
