@@ -1,9 +1,7 @@
-import UTF8ToUTF16 from './utf8-to-utf16';
-
-const ffi = process.platform !== 'win32' ? undefined : require('ffi-napi'); // NOTE: I guess mixing different imports is bad: mb. try: import('ffi-napi').then(...)
-const ref = process.platform !== 'win32' ? undefined : require('ref-napi');
-const types =
-  process.platform !== 'win32' ? undefined : require('../types/win32');
+const ffi = require('ffi-napi');
+const ref = require('ref-napi');
+const UTF8ToUTF16 = require('./utf8-to-utf16');
+const types = require('../types/win32');
 
 /**
  * Test if application in Windows OS runs in terminial service environment.
@@ -12,9 +10,6 @@ const types =
  */
 export const isWindowsRDPEnv = (): boolean => {
   if (process.platform !== 'win32') return false;
-
-  if (ffi === undefined || ref === undefined || types === undefined)
-    return false;
 
   const SM_REMOTESESSION = 0x1000;
 

@@ -3,6 +3,8 @@
  * @param text UFT-8 string that needs to be converted to UTF-16
  * @returns string converted to UFT-16
  */
-export default (text: string): string => {
+const UTF8ToUTF16 = (text: string): string => {
   return Buffer.from(text, 'ucs2').toString('binary');
 };
+
+module.exports.UTF8ToUTF16 = UTF8ToUTF16;
