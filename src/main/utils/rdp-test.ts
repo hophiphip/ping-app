@@ -5,7 +5,7 @@ const types = require('../types/win32');
 /**
  * Test if application in Windows OS runs in terminial service environment.
  *  Reference: https://docs.microsoft.com/en-us/windows/win32/termserv/detecting-the-terminal-services-environment
- * @returns Boolean
+ * @returns boolean
  */
 export const isWindowsRDPEnv = (): boolean => {
   if (process.platform !== 'win32') return false;
@@ -93,8 +93,6 @@ export const isWindowsRDPEnv = (): boolean => {
     hRegKey // pHkey
   );
 
-  console.log(lResult);
-
   if (lResult === ERROR_SUCCESS) {
     const dwGlassSessionId = ref.alloc('uint');
     const dwGlassSessionIdPtr = ref.ref(dwGlassSessionId);
@@ -107,6 +105,7 @@ export const isWindowsRDPEnv = (): boolean => {
     const dwTypePtr = ref.ref(dwType);
 
     lResult = libAdvapi32.RegQueryValueExA(
+      // TODO: This part needs more testing
       hRegKey,
       GLASS_SESSION_ID, // value name
       null, // NULL ptr
