@@ -1,6 +1,5 @@
 const ffi = require('ffi-napi');
 const ref = require('ref-napi');
-const UTF8ToUTF16 = require('./utf8-to-utf16');
 const types = require('../types/win32');
 
 /**
@@ -15,11 +14,10 @@ export const isWindowsRDPEnv = (): boolean => {
 
   const HKEY_LOCAL_MACHINE = 0x80000002;
 
-  const TERMINAL_SERVER_KEY = UTF8ToUTF16(
-    'SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\'
-  );
+  const TERMINAL_SERVER_KEY =
+    'SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\';
 
-  const GLASS_SESSION_ID = UTF8ToUTF16('GlassSessionId');
+  const GLASS_SESSION_ID = 'GlassSessionId';
 
   const KEY_READ = 0x20019;
 
@@ -94,6 +92,8 @@ export const isWindowsRDPEnv = (): boolean => {
     KEY_READ, // access level
     hRegKey // pHkey
   );
+
+  console.log(lResult);
 
   if (lResult === ERROR_SUCCESS) {
     const dwGlassSessionId = ref.alloc('uint');
