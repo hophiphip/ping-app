@@ -4,6 +4,9 @@ import net from 'net';
 import { PingOneChannel, PingOneChannelSuccess } from '../channels';
 import PingResult from '../../shared/PingResult';
 
+/**
+ * Register an IPC listener for testing remote host availability via ICMP request.
+ */
 export default () => {
   ipcMain.on(PingOneChannel, async (event, address: string) => {
     let status = false;

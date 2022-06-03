@@ -12,6 +12,7 @@ import {
   PingChannel,
   PingOneChannelSuccess,
   LogErrChannel,
+  TriggerNotififcation,
 } from './channels';
 
 export type ContextBridgeApi = {
@@ -20,6 +21,7 @@ export type ContextBridgeApi = {
   isAlive: (address: string) => Promise<PingResult>;
   isAliveAll: (addresses: string[]) => Promise<PingResult[]>;
   logErr: (err: any) => void;
+  triggerNotification: (title: string, body: string) => void;
 };
 
 const contextBridgeApi: ContextBridgeApi = {
@@ -61,6 +63,10 @@ const contextBridgeApi: ContextBridgeApi = {
 
   logErr: (err: any) => {
     ipcRenderer.send(LogErrChannel, err);
+  },
+
+  triggerNotification: (title: string, body: string) => {
+    ipcRenderer.send(TriggerNotififcation, title, body);
   },
 };
 

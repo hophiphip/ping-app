@@ -3,6 +3,9 @@ import RdpTestResult from '../../shared/RdpTestResult';
 import { RdpTestChannel, RdpTestChannelSuccess } from '../channels';
 import { isRdp } from '../utils/rdp-test';
 
+/**
+ * Register an IPC listener for testing OS remote services status (RDP, e.t.c.).
+ */
 export default (logErr: (err: any) => void) => {
   ipcMain.on(RdpTestChannel, async (event, _) => {
     let isRdpSession = false;
