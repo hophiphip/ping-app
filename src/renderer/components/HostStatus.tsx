@@ -5,6 +5,12 @@ interface Props {
   status: boolean;
 }
 
+/**
+ * Component that shows host status.
+ * @param address - Host IP address.
+ * @param status  - Host status (Up/Down).
+ * @returns {JSX.Element}
+ */
 const HostStatus = ({ address, status }: Props) => {
   return (
     <li className="host">

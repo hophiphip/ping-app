@@ -1,6 +1,10 @@
 import { useCallback, useState } from 'react';
 import Session from '../models/Session';
 
+/**
+ * Returns session stateful value and a function to update it.
+ * @returns {[Session, () => void]}
+ */
 const useSessionState = (): [Session, () => void] => {
   const [session, setSession] = useState<Session>({
     isRemote: false,

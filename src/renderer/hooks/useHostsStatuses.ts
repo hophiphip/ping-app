@@ -5,6 +5,11 @@ interface Props {
   initial: Host[];
 }
 
+/**
+ * Returns stateful value representing host list, a function to append a new host and a function to update host list.
+ * @param {Host[]} param0 - Initial hosts list values.
+ * @returns {Host[], (Host) => void, () => void}
+ */
 const useHostsStatuses = ({ initial }: Props) => {
   const [hosts, setHosts] = useState<Host[]>(initial);
 

@@ -9,6 +9,12 @@ interface Props {
   remSize?: number;
 }
 
+/**
+ * Components that show platform icon.
+ * @param {String} platform     - Platform name.
+ * @param {number} [remSize=2]  - Platform icon size.
+ * @returns {JSX.Element}
+ */
 const Platform = ({ platform, remSize = 2 }: Props) => {
   const iconStyle = {
     width: `${remSize}rem`,

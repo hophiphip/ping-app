@@ -4,6 +4,11 @@ interface Props {
   onClick: () => void;
 }
 
+/**
+ * Component for showing refresh button.
+ * @param {() => void} onClick - On click button callback.
+ * @returns {JSX.Element}
+ */
 export default ({ onClick }: Props) => {
   return (
     <button type="button" className="refresh" onClick={onClick}>

@@ -4,6 +4,11 @@ interface Props {
   isRemote: boolean;
 }
 
+/**
+ * Component that represents session status.
+ * @param {boolean} isRemote - Is session remote.
+ * @returns {JSX.Element}
+ */
 const Session = ({ isRemote }: Props) => {
   return (
     <p>

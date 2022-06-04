@@ -3,8 +3,8 @@ import Host from '../models/Host';
 
 /**
  * Returns a stateful value representing host model.
- * @param address IP address.
- * @returns
+ * @param {string} address - Host IP address.
+ * @returns {[Host, (boolean | undefined) => void]}
  */
 const useHostStatus = (address: string) => {
   const [host, setHost] = useState<Host>({ host: address, status: false });
